@@ -1,0 +1,1042 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+int ascii = 178, i = 0;
+char ch = ascii;
+
+void aueMenu();
+void user();
+void admin();
+void search();
+void insert();
+void loginAdmin();
+void registrationAdmin();
+void adminWorkSpace();
+void loginUser();
+void registrationUser();
+void userWorkSpace();
+
+
+//struc
+struct BookShop {
+	int bid = 0;
+	float price = 0;
+	string name, aname, pname;
+};
+
+struct Order {
+	int oid, quantity;
+	string name, aname;
+};
+
+void Head() {
+	for (int m = 1; m < 30; m++)
+		cout << ch;
+}
+
+
+//SEARCH BOOK
+void search() {
+	string option;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	while (true) {
+		cout << "\n\n\t== Search Book ==";
+
+		int bid = 0, id = 0, price = 0;
+		string bname, aname, pname;
+		cout << endl << " Enter Book ID: ";
+		cin >> bid;
+
+		ifstream searchbook("books.txt");
+
+		bool bookFound = false;
+
+		while (searchbook >> id >> bname >> aname >> pname >> price) {
+			if (bid == id) {
+				cout << " Book found!" << endl;
+				cout << "\t ID: " << id << endl
+					<< "\t Name: " << bname << endl
+					<< "\t Author: " << aname << endl
+					<< "\t Publisher: " << pname << endl
+					<< "\t Price: " << price << endl;
+				bookFound = true;
+				break;  // No need to continue searching after finding the book
+			}
+		}
+
+		if (!bookFound) {
+			cout << " Wrong Book ID!! Please Check Again!!!" << endl;
+		}
+
+		searchbook.close();  // Close the file after reading
+
+		while (true) {
+			cout << "\n\n\t" << "Do you want to Search another Book ? (y / n) : ";
+			cin >> option;
+
+			if (option == "y") {
+				break;
+			}
+
+			else if (option == "n") {
+				system("cls");
+				adminWorkSpace();
+			}
+
+			else {
+				cout << "\t\t Wrong Input!! Please Follow the Instructions...!!";
+				continue;
+			}
+
+			continue;
+		}
+	}
+}
+
+void searchForUser() {
+	string option;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	while (true) {
+		cout << "\n\n\t== Search Book ==";
+
+		int bid = 0, id = 0, price = 0;
+		string bname, aname, pname;
+		cout << endl << " Enter Book ID: ";
+		cin >> bid;
+
+		ifstream searchbook("books.txt");
+
+		bool bookFound = false;
+
+		while (searchbook >> id >> bname >> aname >> pname >> price) {
+			if (bid == id) {
+				cout << " Book found!" << endl;
+				cout << "\t ID: " << id << endl
+					<< "\t Name: " << bname << endl
+					<< "\t Author: " << aname << endl
+					<< "\t Publisher: " << pname << endl
+					<< "\t Price: " << price << endl;
+				bookFound = true;
+				break;  // No need to continue searching after finding the book
+			}
+		}
+
+		if (!bookFound) {
+			cout << " Wrong Book ID!! Please Check Again!!!" << endl;
+		}
+
+		searchbook.close();  // Close the file after reading
+
+		while (true) {
+			cout << "\n\n\t" << "Do you want to Search another Book ? (y / n) : ";
+			cin >> option;
+
+			if (option == "y") {
+				break;
+			}
+
+			else if (option == "n") {
+				system("cls");
+				userWorkSpace();
+			}
+
+			else {
+				cout << "\t\t Wrong Input!! Please Follow the Instructions...!!";
+				continue;
+			}
+
+			continue;
+		}
+	}
+}
+
+//UPDATE BOOK
+void update() {
+	BookShop updateBook[25];
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	while (true) {
+		cout << "\n\n\t== Update Book ==";
+
+		int bid = 0, id = 0, price = 0;
+		string bname, aname, pname, option;
+
+		cout << endl << " Enter Book ID: ";
+		cin >> bid;
+
+		ifstream inputFile("books.txt");
+		ofstream outputFile("temp.txt");
+
+		bool bookFound = false;
+
+		while (inputFile >> id >> bname >> aname >> pname >> price) {
+			if (bid == id) {
+				cout << " Book found!" << endl;
+				cout << "\t ID: " << id << endl
+					<< "\t Name: " << bname << endl
+					<< "\t Author: " << aname << endl
+					<< "\t Publisher: " << pname << endl
+					<< "\t Price: Rs." << price << endl;
+
+				// Get updated information from the user
+				cout << "\n\n " << ch << ch << " Enter updated book details : " << endl;
+				cout << "\t Name: ";
+				cin >> bname;
+				cout << "\t Author: ";
+				cin >> aname;
+				cout << "\t Publisher: ";
+				cin >> pname;
+				cout << "\t Price: Rs.";
+				cin >> price;
+
+				// Update the book details in the temporary file
+				outputFile << id << " " << bname << " " << aname << " " << pname << " " << price << endl;
+
+				bookFound = true;
+			}
+			else {
+				// Copy other books to the temporary file as is
+				outputFile << id << " " << bname << " " << aname << " " << pname << " " << price << endl;
+			}
+		}
+
+		inputFile.close();
+		outputFile.close();
+
+		// Replace the original file with the temporary file
+		if (remove("books.txt") != 0) {
+			perror("Error deleting original file");
+			exit(EXIT_FAILURE);
+		}
+
+		if (rename("temp.txt", "books.txt") != 0) {
+			perror("Error renaming temporary file");
+			exit(EXIT_FAILURE);
+		}
+
+		if (!bookFound) {
+			cout << "Wrong Book ID!! Please Check Again!!!" << endl;
+			continue;
+		}
+
+		cout << "\n\t\t Book Updated Successfuly!!";
+
+		while (true) {
+			cout << "\n\n\t" << "Do you want to Update another Book ? (y / n) : ";
+			cin >> option;
+
+			if (option == "y") {
+				break;
+			}
+
+			else if (option == "n") {
+				system("cls");
+				adminWorkSpace();
+			}
+
+			else {
+				cout << "\t\t Wrong Input!! Please Follow the Instructions...!!";
+				continue;
+			}
+
+			continue;
+		}
+	}
+}
+
+//DELETE BOOK
+void deleteBook(int bookId) {
+
+	while (true) {
+
+		ifstream inputFile("books.txt");
+		ofstream outputFile("temp.txt");
+
+		int id = 0, price = 0;
+		string name, author, publisher, option;
+
+		bool bookFound = false;
+
+		while (inputFile >> id >> name >> author >> publisher >> price) {
+			if (bookId == id) {
+				cout << "\n Book found!" << endl;
+				cout << "\t ID: " << id << endl
+					<< "\t Name: " << name << endl
+					<< "\t Author: " << author << endl
+					<< "\t Publisher: " << publisher << endl
+					<< "\t Price: " << price << endl;
+
+				bookFound = true;
+			}
+			else {
+				outputFile << id << " " << name << " " << author << " " << publisher << " " << price << std::endl;
+			}
+		}
+
+		inputFile.close();
+		outputFile.close();
+
+		if (remove("books.txt") != 0) {
+			perror("Error deleting original file");
+			exit(EXIT_FAILURE);
+		}
+
+		if (rename("temp.txt", "books.txt") != 0) {
+			perror("Error renaming temporary file");
+			exit(EXIT_FAILURE);
+		}
+
+		if (!bookFound) {
+			cout << "Book with ID " << bookId << " not found! Unable to delete." << endl;
+		}
+		else {
+			cout << "\n\t\t Book deleted successfully." << endl;
+		}
+
+		while (true) {
+			cout << "\n\n\t" << "Do you want to Delete another Book ? (y / n) : ";
+			cin >> option;
+
+			if (option == "y") {
+				break;
+			}
+
+			else if (option == "n") {
+				system("cls");
+				adminWorkSpace();
+			}
+
+			else {
+				cout << "\t\t Wrong Input!! Please Follow the Instructions...!!";
+				continue;
+			}
+
+			continue;
+		}
+
+	}
+}
+
+//SHOW ALL BOOKS
+void showAll() {
+	BookShop F[25];
+	int option;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	fstream searchbook;
+	searchbook.open("allBooks.txt", ios::in); // Read data in books.txt
+	if (searchbook.is_open()) {
+		string line;
+		while (getline(searchbook, line)) {
+			cout << endl << line << endl;
+		}
+		searchbook.close();
+	}
+
+	else {
+		cout << "\n\n\t" << ch << ch << "No books inserted!!";
+
+	}
+
+	while (true) {
+		cout << "\n\n\t Please Enter 1 to move to the Login Page: ";
+		cin >> option;
+		if (option == 1) {
+			system("cls");
+			userWorkSpace();
+		}
+
+		else {
+			cout << "\t\t Wrong Input!!! Please Insert Correct Input!!";
+			continue;
+		}
+	}
+}
+
+void table() {
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	int bid;
+	string  pname, aname, name;
+	float price;
+	fstream books;
+	books.open("books.txt", ios::in);
+	cout << "\n\n\t" << ch << ch << " Books List \n\n";
+	cout << " Book ID \t\t Book Name \t\t Author Name \t\t Publisher Name \t\t Price\n";
+
+
+	while (books >> bid >> name >> aname >> pname >> price) {
+		cout << "  " << bid << "\t\t\t " << name << "\t\t  " << aname << "\t\t  " << pname << "\t\t\t " << price << endl;
+	}
+}
+
+void makeOrder() {
+	while (true) {
+		fstream books;
+		int arrbcode[100], arrbquan[100]{}, count = 0, amount = 0;
+		string choice, name, aname, pname, choice2;
+		int c = 0, bid;
+		float  total = 0, price, disprice;
+		double discount = 0;
+
+
+		books.open("books.txt", ios::in);
+
+		if (!books) {
+			cout << "\n\n\t" << ch << ch << " Empty Products!!";
+		}
+		else {
+			books.close();
+
+			table();
+
+			ofstream orderss("orders.txt", ios::app);
+			while (true) {
+				count++;
+				cout << "\n\n Enter Book ID: ";
+				cin >> arrbcode[c];
+				bool validBooks = false;
+				books.open("books.txt", ios::in);
+
+				if (!books) {
+					cout << "\n\n\t" << ch << ch << " Empty Products!!";
+					break;
+				}
+
+				while (books >> bid >> name >> aname >> pname >> price) {
+					if (bid == arrbcode[c]) {
+						validBooks = true;
+						break;
+					}
+				}
+
+				books.close();
+
+				if (!validBooks) {
+					cout << "\n Wrong product id, please check and re-enter!!\n";
+					continue;
+				}
+
+				cout << "\n Enter Product Quantity: ";
+				cin >> arrbquan[c];
+				orderss << "Book ID: " << arrbcode[c] << endl
+					<< "Quantity: " << arrbquan[c] << endl << endl;
+				c++;
+				cout << " Do you want to add another product? (y / any key) ";
+				cin >> choice;
+				if (choice == "y" || choice == "Y") {
+					continue;
+				}
+				else {
+					break;
+				}
+
+			}
+
+			orderss.close();
+			system("cls");
+			Head();
+			cout << " NETHRA BOOK SHOP ";
+			Head();
+			cout << "\n\n\t\t************************* RECEIPT ************************* \n";
+			cout << "\n Book ID \t Book Name \t Product Quantity \t Book Price \t\t Total \n";
+
+			books.open("books.txt", ios::in);
+
+			for (int i = 0; i < count; i++) {
+				books.clear();
+				books.seekg(0, ios::beg);
+				books >> bid >> name >> aname >> pname >> price;
+				while (books) {
+					if (bid == arrbcode[i]) {
+						amount = price * arrbquan[i];
+						total += amount;
+						cout << "  " << bid << "\t\t    " << name << "\t\t" << arrbquan[i] << "\t\t\t" << price << "\t\t  " << amount << "\n";
+						break;
+					}
+					books >> bid >> name >> aname >> pname >> price;
+				}
+			}
+
+			books.close();
+
+			if (total >= 5000) {
+				discount = 0.20;
+				disprice = total * discount;
+
+				cout << "\n\t\t\t\t\t\t\t      Total Amount is: Rs." << total;
+				cout << "\n\t\t\t\t\t\t\t      Discount Percentage: 20%";
+				total = total - disprice;
+				cout << "\n\t\t\t\t\t\t      So final Total Amount is: Rs." << total;
+
+			}
+
+			else if (total >= 3000) {
+				discount = 0.10;
+				disprice = total * discount;
+
+				cout << "\n\t\t\t\t\t\t\t      Total Amount is: Rs." << total;
+				cout << "\n\t\t\t\t\t\t\t      Discount Percentage: 10%";
+				total = total - disprice;
+				cout << "\n\t\t\t\t\t\t      So final Total Amount is: Rs." << total;
+			}
+
+			else if (total >= 1500) {
+				discount = 0.05;
+				disprice = total * discount;
+
+				cout << "\n\t\t\t\t\t\t\t      Total Amount is: Rs." << total;
+				cout << "\n\t\t\t\t\t\t\t      Discount Percentage: 5%";
+				total = total - disprice;
+				cout << "\n\t\t\t\t\t\t      So final Total Amount is: Rs." << total;
+			}
+
+			else {
+				cout << "\n\t\t\t\t\t\t\t      Total Amount is: Rs." << total;
+			}
+
+
+
+			cout << "\n\n\n\n  " << ch << ch << " Do you want to create another bill ? (y / n) ";
+			cin >> choice2;
+
+
+			if (choice2 == "y") {
+				continue;
+			}
+
+			while (true) {
+				if (choice2 == "y") {
+					break;
+				}
+
+				else if (choice2 == "n") {
+					system("cls");
+					userWorkSpace();
+				}
+				else {
+					cout << "\n\t" << ch << ch << " Invalid Input!! Please follow the instructions!!";
+					cout << "\n\n\n\n  " << ch << ch << " Do you want to create another bill ? (y / n) ";
+					cin >> choice2;
+					continue;
+
+				}
+			}
+			continue;
+		}
+	}
+}
+
+void userWorkSpace() {
+	int option;
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+	cout << "\n\n\t User's Dashboard";
+
+	cout << "\n\n\t\t 1) Search Book";
+	cout << "\n\n\t\t 2) Veiw All Books";
+	cout << "\n\n\t\t 3) Make a Order";
+	cout << "\n\n\t\t 4) Logout";
+
+	while (true) {
+		cout << "\n\n\t Enter the number that you want to DO: ";
+		cin >> option;
+
+		switch (option) {
+		case 1:
+			searchForUser();
+			break;
+
+		case 2:
+			showAll();
+			break;
+
+		case 3:
+			makeOrder();
+			break;
+
+		case 4:
+			user();
+			break;
+
+		default:
+			cout << "\t\t Invalid Input!! Please follow the instructions!! \n";
+			continue;
+		}
+	}
+}
+
+void seeOrders() {
+	int option;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	fstream seeOrder;
+	seeOrder.open("orders.txt", ios::in); // Read data in orders.txt
+	if (seeOrder.is_open()) {
+		string line;
+		while (getline(seeOrder, line)) {
+			cout << endl << line << endl;
+		}
+		seeOrder.close();
+		while (true) {
+			cout << "\n\n\t Please Enter 1 for moving to the Admin's Work Space...: ";
+			cin >> option;
+			if (option == 1) {
+				system("cls");
+				adminWorkSpace();
+			}
+
+			else {
+				cout << "\t\t Wrong Input!!! Please Follow the Instructions!!";
+				continue;
+			}
+		}
+	}
+
+	else {
+		cout << "\n\n\t" << ch << ch << " No Orders Yet!!";
+		while (true) {
+			cout << "\n\n\t Please Enter 1 for moving to the Admin's Work Space...: ";
+			cin >> option;
+			if (option == 1) {
+				system("cls");
+				adminWorkSpace();
+			}
+
+			else {
+				cout << "\t\t Wrong Input!!! Please Follow the Instructions!!";
+				continue;
+			}
+		}
+
+
+	}
+
+
+}
+
+void adminWorkSpace() {
+	int option, bookid;
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+	cout << "\n\n\t Admin's Dashboard";
+
+	cout << "\n\n\t\t 1) Insert Book";
+	cout << "\n\n\t\t 2) Search Book";
+	cout << "\n\n\t\t 3) Update Book";
+	cout << "\n\n\t\t 4) Delete Book";
+	cout << "\n\n\t\t 5) View Orders";
+	cout << "\n\n\t\t 6) Logout";
+
+	while (true) {
+		cout << "\n\n\t Enter the number that you want to DO: ";
+		cin >> option;
+
+		switch (option) {
+		case 1:
+			insert();
+			break;
+
+		case 2:
+			search();
+			break;
+
+		case 3:
+			update();
+			break;
+
+		case 4:
+			system("cls");
+			Head();
+			cout << " NETHRA BOOK SHOP ";
+			Head();
+			cout << "\n\n\t== Delete Book ==";
+			cout << "\n Enter Book ID of the book which you want to Delete: ";
+			cin >> bookid;
+			deleteBook(bookid);
+			break;
+
+		case 5:
+			seeOrders();
+			break;
+
+		case 6:
+			admin();
+			break;
+
+		default:
+			cout << "\t\t Invalid Input!! Please follow the instructions!! \n";
+			continue;
+		}
+	}
+}
+
+// INSERT NEW BOOK
+void insert() {
+	BookShop insertBook[25];
+	string option;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	while (true) {
+		cout << "\n\n\t== Insert New Book ==";
+		cout << "\n\n ENTER BOOK ID: ";
+		cin >> insertBook[i].bid;
+		cout << "\n ENTER BOOK NAME: ";
+		cin >> insertBook[i].name;
+		cout << "\n ENTER AUTHOR NAME: ";
+		cin >> insertBook[i].aname;
+		cout << "\n ENTER PUBLISHER NAME: ";
+		cin >> insertBook[i].pname;
+		cout << "\n ENTER BOOK PRICE: Rs.";
+		cin >> insertBook[i].price;
+
+		ofstream bookshop("books.txt", ios::app); //Writing Books in book file
+		bookshop << insertBook[i].bid << " " << insertBook[i].name << " "
+			<< insertBook[i].aname << " " << insertBook[i].pname << " " << insertBook[i].price << endl;
+
+		ofstream showAllBooks("allbooks.txt", ios::app);
+		showAllBooks << endl << "Book ID: " << insertBook[i].bid << endl
+			<< "Book Name: " << insertBook[i].name << endl
+			<< "Author Name: " << insertBook[i].aname << endl
+			<< "Publisher Name: " << insertBook[i].pname << endl
+			<< "Price: Rs." << insertBook[i].price << endl;
+
+		i++;
+		cout << "\n\n\t " << ch << ch << " INSERT NEW BOOK SUCCESSFULLY!! " << "\n\n\n";
+
+
+		cout << "Do you want to INSERT another book? (y/n): ";
+		cin >> option;
+		if (option == "y") {
+
+			continue;
+		}
+
+		else if (option == "n") {
+			system("cls");
+			adminWorkSpace();
+		}
+
+		else {
+			while (true) {
+				cout << " Wrong Input!! Please Follow the Instructions...!!";
+				cout << "\n Do you want to INSERT another book? (y/n)";
+				cin >> option;
+				if (option == "n") {
+					system("cls");
+					adminWorkSpace();
+				}
+
+				if (option == "y") {
+					break;
+				}
+
+				else {
+					continue;
+				}
+
+				continue;
+			}
+		}
+	}
+}
+
+void admin() {
+	int option;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+	cout << "\n\n\t Admin's Login Section";
+
+	cout << "\n\n\t\t 1) Login";
+	cout << "\n\n\t\t 2) Register";
+	cout << "\n\n\t\t 3) Exit \n";
+
+	while (true) {
+		cout << "\n\n\t Enter the number that you want to DO: ";
+		cin >> option;
+
+		switch (option) {
+		case 1:
+			loginAdmin();
+			break;
+
+		case 2:
+			registrationAdmin();
+			break;
+
+		case 3:
+			system("cls");
+			aueMenu();
+			break;
+
+		default:
+			cout << "\t\t Invalid Input!! Please follow the instructions!! \n";
+			continue;
+		}
+	}
+}
+
+void user() {
+	int option;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+	cout << "\n\n\t User's Login Section";
+	cout << "\n\n\t\t 1) Login";
+	cout << "\n\n\t\t 2) Register";
+	cout << "\n\n\t\t 3) Exit \n";
+
+	while (true) {
+		cout << "\n\n\t Enter the number that you want to DO: ";
+		cin >> option;
+
+		switch (option) {
+		case 1:
+			loginUser();
+			break;
+
+		case 2:
+			registrationUser();
+			break;
+
+		case 3:
+			system("cls");
+			aueMenu();
+			break;
+
+		default:
+			cout << "\t\t Invalid Input!! Please follow the instructions!! \n";
+			continue;
+
+		}
+	}
+}
+
+
+void aueMenu() {
+	int option;
+
+	Head();
+	cout << "  NETHRA BOOK SHOP  ";
+	Head();
+
+	cout << "\n\n\t\t 1) Admin \n";
+	cout << "\n\n\t\t 2) User \n";
+	cout << "\n\n\t\t 3) Exit \n";
+	cout << "\n\n\t Please Enter Your Choice: ";
+	cin >> option;
+
+	switch (option) {
+	case 1:
+		admin();
+		break;
+
+	case 2:
+		user();
+		break;
+
+	case 3:
+		cout << "\n\n\t\t" << ch << ch << " Thank you!! Have a Greate day!! \n\n";
+		exit(option);
+		break;
+
+	default:
+		system("cls");
+		cout << "Invalid Input!! Please follow the instructions!! \n\n";
+		aueMenu();
+	}
+}
+
+
+//===============================================================================================
+int main() {
+
+
+	aueMenu();
+
+
+	return 0;
+}
+//================================================================================================
+
+
+void loginAdmin() { //================================================== ADMIN LOGIN =============================================
+	int count = 0;
+	string userID, password, id, pass;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	cout << "\n\n\t\t Please Enter Username and Password: " << endl;
+	cout << "\n\t\t XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+	cout << "\n\t\t X *Remember You have only THREE attempts to insert your username and password!! X";
+	cout << "\n\t\t X So, please insert your username and password with attention                   X";
+	cout << "\n\t\t XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << endl << endl;
+
+
+	for (int i = 0; i < 3; i++) {
+		cout << "\t\t\t USERNAME: ";
+		cin >> userID;
+		cout << "\t\t\t PASSWORD: ";
+		cin >> password;
+
+		ifstream input("adminRecords.txt");
+
+		while (input >> id >> pass) {
+			if (id == userID && pass == password) {
+				count = 1;
+			}
+		}
+		input.close();
+
+		if (count == 1) {
+			system("cls");
+			cout << "\n " << userID << " Your login is successfull \n Thanks for login in! \n\n";
+			adminWorkSpace();
+		}
+		else {
+			cout << "\n\t Login error \n\t Please check your username and password \n\n";
+		}
+	}
+	cout << "\n\t\t" << ch << ch << " Your attempts are finish!! please re-start the program. \n\n";
+	exit(count);
+}
+
+void registrationAdmin() {
+	string ruserID, rpassword, rid, rpass;
+	int option;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	cout << "\n\n\t\t Enter The username: ";
+	cin >> ruserID;
+	cout << "\t\t Enter the password: ";
+	cin >> rpassword;
+
+	ofstream f1("adminRecords.txt", ios::app);
+	f1 << ruserID << " " << rpassword << endl;
+
+	cout << "\n\t\t\t    Registration is successful! \n\n";
+
+	while (true) {
+		cout << "\n\n\t Please Enter 1 to move to the Login Page: ";
+		cin >> option;
+		if (option == 1) {
+			admin();
+		}
+
+		else {
+			cout << "\t\t Wrong Input!!! Please Insert Correct Input!!";
+			continue;
+		}
+	}
+}
+
+void loginUser() { //================================================== ADMIN LOGIN =============================================
+	int count = 0;
+	string userID, password, id, pass;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	cout << "\n\n\t\t Please Enter Username and Password: " << endl;
+	cout << "\n\t\t XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+	cout << "\n\t\t X *Remember You have only THREE attempts to insert your username and password!! X";
+	cout << "\n\t\t X So, please insert your username and password with attention                   X";
+	cout << "\n\t\t XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << endl << endl;
+
+
+	for (int i = 0; i < 3; i++) {
+		cout << "\t\t\t USERNAME: ";
+		cin >> userID;
+		cout << "\t\t\t PASSWORD: ";
+		cin >> password;
+
+		ifstream input("userRecords.txt");
+
+		while (input >> id >> pass) {
+			if (id == userID && pass == password) {
+				count = 1;
+			}
+		}
+		input.close();
+
+		if (count == 1) {
+			system("cls");
+			cout << "\n " << userID << " Your login is successfull \n Thanks for login in! \n\n";
+			userWorkSpace();
+		}
+		else {
+			cout << "\n\t Login error \n\t Please check your username and password \n\n";
+		}
+	}
+	cout << "\n\t\t" << ch << ch << " Your attempts are finish!! please re-start the program. \n\n";
+	exit(count);
+}
+
+
+void registrationUser() {
+	string ruserID, rpassword, rid, rpass;
+	int option;
+	system("cls");
+	Head();
+	cout << " NETHRA BOOK SHOP ";
+	Head();
+
+	cout << "\n\n\t\t Enter The username: ";
+	cin >> ruserID;
+	cout << "\t\t Enter the password: ";
+	cin >> rpassword;
+
+	ofstream f1("userRecords.txt", ios::app);
+	f1 << ruserID << " " << rpassword << endl;
+
+	cout << "\n\t\t\t    Registration is successful! \n\n";
+
+	while (true) {
+		cout << "\n\n\t Please Enter 1 to move to the Login Page: ";
+		cin >> option;
+		if (option == 1) {
+			user();
+		}
+
+		else {
+			cout << "\t\t Wrong Input!!! Please Insert Correct Input!!";
+			continue;
+		}
+	}
+}

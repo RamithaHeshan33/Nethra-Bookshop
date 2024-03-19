@@ -1,0 +1,15 @@
+Book ID: 101
+Quantity: 5
+
+Book ID: 103
+Quantity: 3
+
+Book ID: 102
+Quantity: 10
+
+Book ID: 101
+Quantity: 5
+
+Book ID: 101
+Quantity: 5
+

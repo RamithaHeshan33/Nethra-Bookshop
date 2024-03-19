@@ -1,0 +1,7 @@
+101 single_rule no_author sarasavi 250
+102 square_rool no_author padanama 300
+103 kali_yugaya Mr.Martin sarsavi 250
+101 sss sss sss 250
+102 sss sss www 300
+111 sss sss sss 111
+222 qqq qqq qqq 222
